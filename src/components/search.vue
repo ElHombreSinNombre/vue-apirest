@@ -1,40 +1,29 @@
 <template>
-  <div>
-    <!-- Clases de Tailwind. Un poco obtusas al principio-->
-    <div class="flex justify-center items-center h-screen">
-      <div class="max-w-md py-4 px-8 bg-white shadow-lg rounded-lg my-20">
-        <div class="flex justify-center md:justify-end -mt-16">
-          <div class="flex items-center justify-center">
-            <div class="relative text-gray-600">
-              <div class="border-2 border-gray-200 rounded">
-                <!-- Verificamos que es letra o número -->
-                <input
-                  type="text"
-                  class="py-2 pl-2 w-full"
-                  placeholder="Search...."
-                  v-on:keypress="isLetterOrNumber($event)"
-                  v-model="searchInput"
-                />
-              </div>
-              <!-- Verificamos que el array no está vacio e iteramos -->
-              <div v-if="countries && countries.length">
-                <ul v-for="(countries, item) in countries" :key="item.id">
-                  <li>
-                    <i class="fa-solid fa-circle-right"></i>
-                    {{ countries.display_name }}
-                  </li>
-                </ul>
-              </div>
-              <!-- Texto en caso de que la búsqueda no devuelva nada -->
-              <strong
-                v-if="searchInput.length > 0 && countries.length == 0"
-                class="text-center"
-                >No hay resultados</strong
-              >
-            </div>
-          </div>
-        </div>
+  <div class="h-screen flex items-center justify-center">
+    <!-- Card -->
+    <div class="w-max rounded-xl shadow-md p-5 bg-white hover:shadow-lg text-justify">
+      <input
+        type="text"
+        class="py-2 pl-2 w-full"
+        placeholder="Buscar...."
+        v-on:keypress="isLetterOrNumber($event)"
+        v-model="searchInput"
+      />
+      <!-- Verificamos que el array no está vacio e iteramos -->
+      <div v-if="countries && countries.length">
+        <ul v-for="(countries, item) in countries" :key="item.id">
+          <li>
+            <i class="fa-solid fa-circle-right"></i>
+            {{ countries.display_name }}
+          </li>
+        </ul>
       </div>
+      <!-- Texto en caso de que la búsqueda no devuelva nada -->
+      <strong
+        v-if="searchInput.length > 0 && countries.length == 0"
+        class="text-red-600 "
+        >No hay resultados</strong
+      >
     </div>
   </div>
 </template>
