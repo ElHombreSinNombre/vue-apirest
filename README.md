@@ -1,12 +1,14 @@
-# Para ejecutar la aplicación
+# Guía
+
+### Para ejecutar la aplicación
 
     npm install
     npm run serve
 
-Para publicarlo en un servidor
+### Para compilarlo y desplegarlo en un servidor
 
     npm run build | npm run dev
 
- ## Notas
+### Notas
 
  Se ha usado **[Tailwind](https://tailwindcss.com/)** y **[Fontawesome](https://fontawesome.com/)** para maquetación.
