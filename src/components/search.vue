@@ -1,6 +1,6 @@
 <template>
   <div class="h-screen flex items-center justify-center">
-    <div class=" w-max rounded-xl shadow-md p-5 bg-white hover:shadow-lg text-justify">
+    <div class="w-96 rounded-xl shadow-md p-5 bg-white hover:shadow-lg text-justify">
       <div class="md:flex">
         <div class="w-full p-3">
           <div class="relative">
@@ -17,10 +17,10 @@
         </div>
       </div>
       <!-- Verificamos que el array no está vacio e iteramos -->
-      <div v-if="countries && countries.length">
+      <div v-if="countries && countries.length" class="overflow-auto max-h-80">
         <ul v-for="(countries, item) in countries" :key="item.id">
           <li
-            class="text-gray-400 hover:text-black cursor-pointer"
+            class="text-gray-400 hover:text-black cursor-pointer mx-6"
             @click="openGoogleMap(countries.lat, countries.lon)"
           >
             <i class="fa-solid fa-circle-right"></i>
@@ -28,12 +28,16 @@
           </li>
         </ul>
       </div>
+      <!-- Indicamos al usuario cuantos caracetes le hacen falta para comenzar la búsqueda -->
+      <div v-if=" searchInput.length >= 1 && searchInput.length < 3 && countries.length == 0 " class="px-4 py-3 rounded relative">
+        <span ><i class="fas fa-info-circle"></i> Escribe {{ 3 - searchInput.length }} caracter más</span>
+      </div>
       <!-- Texto en caso de que la búsqueda no devuelva nada -->
       <div v-if="countries.length == 0 && searchInput.length >= 3 && loading == false" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
         <span>{{ empty }}</span>
       </div>
-      <!-- Icono de carga -->
-      <div v-if="searchInput.length >= 3 && loading == true"  class="flex justify-center items-center ">
+      <!-- Icono que indica al usuario que se está realizando una búsqueda -->
+      <div v-if="searchInput.length >= 3 && loading == true" class="flex justify-center items-center">
         <i class="fa-2x fas fa-spinner fa-spin"></i>
       </div>
     </div>
@@ -41,11 +45,15 @@
 </template>
 
 <script lang="ts">
-import axios from "axios";
+import { useCountriesStore } from "../stores/countries";
+var store: any;
 
 export default {
   name: "searchComponent",
   props: { empty: String },
+  setup() {
+    store = useCountriesStore();
+  },
   data() {
     return {
       searchInput: "",
@@ -55,16 +63,18 @@ export default {
   },
   //Watcher par aplicar cambios y hacer búsqueda sin necesidad de llamar a eventos
   watch: {
-    searchInput: function (v: String) {
+    searchInput: function (v: string) {
       this.searchInput = v.toLowerCase().trim();
       if (this.searchInput.length == 0) {
         this.countries = [];
       }
       if (this.searchInput.length >= 3) {
         if (!this.loading) {
+          ///En caso de que hayan pasado 300ms, llamamos a la función de búsqueda
           setTimeout(() => {
-            ///En caso de que hayan pasado 300ms, llamamos a la función de búsqueda
-            this.api();
+            //Usamos Pinia para hacer una store
+            store.fetchCountries(this.searchInput);
+            this.countries = store.getCountry;
             this.loading = false;
           }, 300);
         }
@@ -73,24 +83,6 @@ export default {
     },
   },
   methods: {
-    api() {
-      axios
-        .get(
-          "https://nominatim.openstreetmap.org/search.php?q=" +
-            this.searchInput +
-            "&format=jsonv2"
-        )
-        .then((response: any) => {
-          //Ordenamos por nombre y asignacmos a variable
-          response.data = response.data.sort((a: any, b: any) =>
-            a.display_name < b.display_name ? -1 : 1
-          );
-          this.countries = response.data;
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    },
     //Función de verificación de letra o número
     isLetterOrNumber(e: any) {
       let char = String.fromCharCode(e.keyCode);
@@ -98,7 +90,7 @@ export default {
       else e.preventDefault();
     },
     //Función para buscar en maps la localización
-    openGoogleMap(lat: String, lon: String) {
+    openGoogleMap(lat: string, lon: string) {
       window.open(
         "https://www.google.com/maps/search/?api=1&query=" + lat + "," + lon,
         "_blank"

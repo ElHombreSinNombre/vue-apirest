@@ -12,3 +12,5 @@
 ### Notas
 
  Se ha usado **[Tailwind](https://tailwindcss.com/)** y **[Fontawesome](https://fontawesome.com/)** para maquetación.
+
+ En la última versión de **[Vue](https://vuejs.org/)** hay un reemplazo a **[Vuex](https://vuex.vuejs.org/)** llamado **[Pinia](https://pinia.vuejs.org/)**. He usado este último.
