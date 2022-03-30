@@ -1,6 +1,6 @@
 <template>
   <div class="h-screen flex items-center justify-center">
-    <div class=" w-max rounded-xl shadow-md p-5 bg-white hover:shadow-lgtext-justify">
+    <div class=" w-max rounded-xl shadow-md p-5 bg-white hover:shadow-lg text-justify">
       <div class="md:flex">
         <div class="w-full p-3">
           <div class="relative">
