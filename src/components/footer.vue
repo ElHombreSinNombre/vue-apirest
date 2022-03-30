@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 bg-gray-300 text-gray-400 text-center hover:text-black">
+  <div class="p-4 bg-gray-300 text-center text-gray-400 hover:text-black">
     <a
       href="https://github.com/ElHombreSinNombre"
       target="_blank"
@@ -23,9 +23,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: "footerComponent",
-  props: ["business", "url"],
+  props: {"business": String, "url": String},
 };
 </script>
