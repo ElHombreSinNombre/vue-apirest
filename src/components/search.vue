@@ -17,7 +17,9 @@
         </div>
       </div>
       <!-- Verificamos que el array no está vacio e iteramos -->
-      <div v-if="countries && countries.length" class="overflow-auto max-h-80">
+      <div v-if="countries && countries.length" class="overflow-y-auto max-h-80">
+        <!-- Agregamos transición a la lista para mejorar el look & feel -->
+        <TransitionGroup name="list" tag="ul">
         <ul v-for="(countries, item) in countries" :key="item.id">
           <li
             class="text-gray-400 hover:text-black cursor-pointer mx-6"
@@ -27,6 +29,10 @@
             {{ countries.display_name }}
           </li>
         </ul>
+        </TransitionGroup>
+      </div>
+      <div v-if="countries.length > 0 && loading == false" class="px-4 py-3 rounded relative">
+        <span><b>{{countries.length}}</b> elementos encontrados</span>
       </div>
       <!-- Indicamos al usuario cuantos caracetes le hacen falta para comenzar la búsqueda -->
       <div v-if=" searchInput.length >= 1 && searchInput.length < 3 && countries.length == 0 " class="px-4 py-3 rounded relative">
@@ -34,7 +40,7 @@
       </div>
       <!-- Texto en caso de que la búsqueda no devuelva nada -->
       <div v-if="countries.length == 0 && searchInput.length >= 3 && loading == false" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
-        <span>{{ empty }}</span>
+        <span>No hay resultados</span>
       </div>
       <!-- Icono que indica al usuario que se está realizando una búsqueda -->
       <div v-if="searchInput.length >= 3 && loading == true" class="flex justify-center items-center">
@@ -50,7 +56,6 @@ var store: any;
 
 export default {
   name: "searchComponent",
-  props: { empty: String },
   setup() {
     store = useCountriesStore();
   },
@@ -92,7 +97,7 @@ export default {
     //Función para buscar en maps la localización
     openGoogleMap(lat: string, lon: string) {
       window.open(
-        "https://www.google.com/maps/search/?api=1&query=" + lat + "," + lon,
+        "https://www.google.com/maps/search/" + lat + "," + lon,
         "_blank"
       );
     },
