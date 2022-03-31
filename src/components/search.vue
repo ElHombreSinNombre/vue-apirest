@@ -7,7 +7,6 @@
             <i class="absolute fa fa-search text-gray-400 top-5 left-4"></i>
             <input
               placeholder="Buscar...."
-              v-on:keypress="isLetterOrNumber($event)"
               v-model="searchInput"
               type="text"
               class="bg-white h-14 w-full px-12 rounded-lg cursor-pointer"
@@ -20,15 +19,13 @@
       <div v-if="countries && countries.length" class="overflow-y-auto max-h-80">
         <!-- Agregamos transición a la lista para mejorar el look & feel -->
         <TransitionGroup name="list" tag="ul">
-        <ul v-for="(countries, item) in countries" :key="item.id">
-          <li
+          <li v-for="(countries, index) in countries" :key="index"
             class="text-gray-400 hover:text-black cursor-pointer mx-6"
             @click="openGoogleMap(countries.lat, countries.lon)"
           >
             <i class="fa-solid fa-circle-right"></i>
             {{ countries.display_name }}
           </li>
-        </ul>
         </TransitionGroup>
       </div>
       <div v-if="countries.length > 0 && loading == false" class="px-4 py-3 rounded relative">
@@ -52,55 +49,55 @@
 
 <script lang="ts">
 import { useCountriesStore } from "../stores/countries";
-var store: any;
+import { watch, ref } from "vue";
 
 export default {
   name: "searchComponent",
+  //API Composition, nueva forma de organizar los datos en Vue 3
   setup() {
-    store = useCountriesStore();
-  },
-  data() {
-    return {
-      searchInput: "",
-      countries: [],
-      loading: false,
-    };
-  },
-  //Watcher par aplicar cambios y hacer búsqueda sin necesidad de llamar a eventos
-  watch: {
-    searchInput: function (v: string) {
-      this.searchInput = v.toLowerCase().trim();
-      if (this.searchInput.length == 0) {
-        this.countries = [];
+    const searchInput = ref("");
+    const countries = ref([]);
+    const loading = ref(false);
+    const store = useCountriesStore();
+    //Watcher para aplicar cambios y hacer búsqueda sin necesidad de llamar a eventos
+    watch(searchInput, (v: String) => {
+      searchInput.value = v.toLowerCase().trim();
+      isLetterOrNumber(searchInput.value);
+      if (searchInput.value.length == 0) {
+        countries.value = [];
       }
-      if (this.searchInput.length >= 3) {
-        if (!this.loading) {
+      if (searchInput.value.length >= 3) {
+        if (!loading.value) {
           ///En caso de que hayan pasado 300ms, llamamos a la función de búsqueda
           setTimeout(() => {
             //Usamos Pinia para hacer una store
-            store.fetchCountries(this.searchInput);
-            this.countries = store.getCountry;
-            this.loading = false;
+            store.fetchCountries(searchInput.value);
+            countries.value = store.getCountry;
+            loading.value = false;
           }, 300);
         }
-        this.loading = true;
+        loading.value = true;
       }
-    },
-  },
-  methods: {
-    //Función de verificación de letra o número
-    isLetterOrNumber(e: any) {
-      let char = String.fromCharCode(e.keyCode);
-      if (/^[a-zA-Z0-9]+$/.test(char)) return true;
-      else e.preventDefault();
-    },
+    });
+    //Función para aceptar únicamente alfanuméricos
+    function isLetterOrNumber(value: String) {
+      if (value.match(/^[0-9a-z]+$/)) return true;
+      searchInput.value = "";
+    }
     //Función para buscar en maps la localización
-    openGoogleMap(lat: string, lon: string) {
+    function openGoogleMap(lat: String, lon: String) {
       window.open(
         "https://www.google.com/maps/search/" + lat + "," + lon,
         "_blank"
       );
-    },
+    }
+    return {
+      searchInput,
+      countries,
+      loading,
+      isLetterOrNumber,
+      openGoogleMap,
+    };
   },
 };
 </script>
