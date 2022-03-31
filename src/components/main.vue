@@ -42,7 +42,6 @@
 <script lang="ts">
 export default {
   name: "mainComponent",
-   props: {"searchInput": String, "loading": Boolean, "countries": Array},
-
+  props: {"searchInput": String, "loading": Boolean, "countries": Array},
 };
 </script>
