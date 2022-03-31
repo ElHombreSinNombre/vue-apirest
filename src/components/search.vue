@@ -5,11 +5,7 @@
         <div class="w-full p-3">
           <div class="relative">
             <i class="absolute fa fa-search text-gray-400 top-5 left-4"></i>
-            <input
-              placeholder="Buscar...."
-              v-model="searchInput"
-              type="text"
-              class="bg-white h-14 w-full px-12 rounded-lg cursor-pointer"
+            <input placeholder="Buscar...." v-model="searchInput" type="text" ref="search" :disabled="loading == true ? true :false" class="bg-white h-14 w-full px-12 rounded-lg cursor-pointer "
             />
             <span class="absolute top-4 right-5 border-l pl-4"></span>
           </div>
@@ -32,7 +28,7 @@
         <span><b>{{countries.length}}</b> elementos encontrados</span>
       </div>
       <!-- Indicamos al usuario cuantos caracetes le hacen falta para comenzar la búsqueda -->
-      <div v-if=" searchInput.length >= 1 && searchInput.length < 3 && countries.length == 0 " class="px-4 py-3 rounded relative">
+      <div v-if="searchInput.length >= 1 && searchInput.length < 3 && countries.length == 0 " class="px-4 py-3 rounded relative">
         <span ><i class="fas fa-info-circle"></i> Escribe {{ 3 - searchInput.length }} caracter más</span>
       </div>
       <!-- Texto en caso de que la búsqueda no devuelva nada -->
@@ -49,16 +45,21 @@
 
 <script lang="ts">
 import { useCountriesStore } from "../stores/countries";
-import { watch, ref } from "vue";
+import { watch, ref, onMounted, onUpdated } from "vue";
 
 export default {
   name: "searchComponent",
   //API Composition, nueva forma de organizar los datos en Vue 3
   setup() {
+    const search = ref(null);
     const searchInput = ref("");
     const countries = ref([]);
     const loading = ref(false);
     const store = useCountriesStore();
+    // Metodo que asigna el focus cuando se inicia la vista
+    onMounted(() => { search.value.focus() });
+    // Metodo que asigna el focus cuando se actualiza la vista
+    onUpdated(() => { search.value.focus() });
     //Watcher para aplicar cambios y hacer búsqueda sin necesidad de llamar a eventos
     watch(searchInput, (v: String) => {
       searchInput.value = v.toLowerCase().trim();
@@ -95,9 +96,12 @@ export default {
       searchInput,
       countries,
       loading,
+      search,
       isLetterOrNumber,
       openGoogleMap,
     };
   },
 };
+
+
 </script>
