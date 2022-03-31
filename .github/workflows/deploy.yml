@@ -1,11 +1,11 @@
-  name: Check NPM packages and build
+  name: CI
   on:
     push:
       branches:
         - main
   jobs:
     build:
-      name: Build
+      name: Build & deploy
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v2
@@ -17,4 +17,10 @@
           run: npm i
         - name: Build
           run: npm run build
+        - name: Deploy
+          uses: JamesIves/github-pages-deploy-action@v4.2.5
+          with:
+            branch: gh-pages 
+            folder: dist 
+            github_token: ${{ secrets.GITHUB_TOKEN }}
 
