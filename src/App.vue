@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import searchComponent from "./components/header.vue";
+import searchComponent from "./components/search.vue";
 import footerComponent from "./components/footer.vue";
 
 export default defineComponent({

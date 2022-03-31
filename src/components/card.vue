@@ -1,6 +1,6 @@
 <template>
   <div class="h-5/6 flex items-center justify-center">
-    <div class="w-96 rounded-xl shadow-md p-5 bg-white hover:shadow-lg text-justify">
+    <div class="w-96 rounded-xl shadow-md p-5 bg-white hover:shadow-lg text-justify" >
      <!-- Texto por defecto -->
       <div v-if="searchInput <  3 && loading == false" class="text-center p-0.5 ">
         <div>Introduzca una búsqueda para encontrar diferentes localizaciones</div>
@@ -43,5 +43,18 @@
 export default {
   name: "mainComponent",
   props: {"searchInput": String, "loading": Boolean, "countries": Array},
+  //API Composition, nueva forma de organizar los datos en Vue 3
+  setup() {
+    //Función para buscar en maps la localización
+    function openGoogleMap(lat: String, lon: String) {
+      window.open(
+        "https://www.google.com/maps/search/" + lat + "," + lon,
+        "_blank"
+      );
+    }
+    return {
+      openGoogleMap,
+    };
+  },
 };
 </script>

@@ -11,23 +11,23 @@
     </div>
   </div>
   <div class="flex-1 p-5 justify-center">
-    <list
+    <card
       :countries="countries"
       :loading="loading"
       :searchInput="searchInput"
-    ></list>
+    ></card>
   </div>
 </template>
 
 <script lang="ts">
 import { useCountriesStore } from "../stores/countries";
 import { watch, ref, onMounted, onUpdated } from "vue";
-import list from "./main.vue";
+import card from "./card.vue";
 
 export default {
   name: "headerComponent",
   components: {
-    list,
+    card,
   },
   //API Composition, nueva forma de organizar los datos en Vue 3
   setup() {
@@ -69,20 +69,12 @@ export default {
       if (value.match(/^[0-9a-z]+$/)) return true;
       searchInput.value = "";
     }
-    //Función para buscar en maps la localización
-    function openGoogleMap(lat: String, lon: String) {
-      window.open(
-        "https://www.google.com/maps/search/" + lat + "," + lon,
-        "_blank"
-      );
-    }
     return {
       searchInput,
       countries,
       loading,
       search,
       isLetterOrNumber,
-      openGoogleMap,
     };
   },
 };
