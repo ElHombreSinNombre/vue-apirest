@@ -3,10 +3,10 @@ import axios from "axios"
 
 export const useCountriesStore = defineStore("countries", {
     state: () => ({
-        countries: [],
+        countries: Array<[]>(),
     }),
     getters: {
-        getCountry(state) {
+        getCountry(state: any) {
             return state.countries
         }
     },
@@ -18,14 +18,14 @@ export const useCountriesStore = defineStore("countries", {
                     value +
                     "&format=jsonv2"
                 )
-                .then((response) => {
+                .then((response: any) => {
                     //Ordenamos por nombre y asignacmos a variable
                     response.data = response.data.sort((a: any, b: any) =>
                         a.display_name < b.display_name ? -1 : 1
                     );
                     this.countries = response.data;
                 })
-                .catch((e) => {
+                .catch((e: String) => {
                     console.log(e);
                 });
         }
