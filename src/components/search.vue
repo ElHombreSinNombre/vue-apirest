@@ -22,6 +22,7 @@
 <script lang="ts">
 import { useCountriesStore } from "../stores/countries";
 import { watch, ref, onMounted, onUpdated } from "vue";
+import debounce from "lodash/debounce"
 import card from "./card.vue";
 
 export default {
@@ -34,8 +35,10 @@ export default {
     const search = ref(null);
     const searchInput = ref("");
     const countries = ref([]);
+    //Utilizamos únicamente está variable para mostrar mensajes de carga
     const loading = ref(false);
     const store = useCountriesStore();
+    const values = debounce(getStore, 300);
     // Metodo que asigna el focus cuando se inicia la vista
     onMounted(() => {
       search.value.focus();
@@ -53,17 +56,18 @@ export default {
       }
       if (searchInput.value.length >= 3) {
         if (!loading.value) {
-          ///En caso de que hayan pasado 300ms, llamamos a la función de búsqueda
-          setTimeout(() => {
-            //Usamos Pinia para hacer una store
-            store.fetchCountries(searchInput.value);
-            countries.value = store.getCountry;
-            loading.value = false;
-          }, 300);
+          loading.value = true;
+          //Llamamos a la variable para obtener datos y agregamos un debounce para meter un timeout
+          values();
         }
-        loading.value = true;
       }
     });
+    //Función para llamar a la store y obtener los datos
+    function getStore(){
+      store.fetchCountries(searchInput.value);
+      countries.value = store.getCountry;
+      loading.value = false;
+    }
     //Función para aceptar únicamente alfanuméricos
     function isLetterOrNumber(value: String) {
       if (value.match(/^[0-9a-z]+$/)) return true;
