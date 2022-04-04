@@ -5,7 +5,7 @@
         - main
   jobs:
     build:
-      name: Build & deploy
+      name: Build & deploy (Simulation)
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v2
@@ -15,12 +15,5 @@
             node-version: 16
         - name: Install packages
           run: npm i
-        - name: Build
-          run: npm run build
         - name: Deploy
-          uses: JamesIves/github-pages-deploy-action@v4.2.5
-          with:
-            branch: gh-pages 
-            folder: dist 
-            token: ${{ secrets.GITHUB_TOKEN }}
-
+          run: npm run deploy
