@@ -4,8 +4,6 @@
     <searchComponent></searchComponent>
     <footerComponent
       class="fixed inset-x-0 bottom-0"
-      business="Passpoter"
-      url="https://passporterapp.com/es"
     ></footerComponent>
   </div>
 </template>

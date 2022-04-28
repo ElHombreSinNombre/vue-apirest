@@ -14,14 +14,13 @@ export const useCountriesStore = defineStore("countries", {
         async fetchCountries(value: string) {
             axios
                 .get(
-                    "https://nominatim.openstreetmap.org/search.php?q=" +
-                    value +
-                    "&format=jsonv2"
+                    "https://restcountries.com/v3.1/name/" +
+                    value
                 )
                 .then((response: any) => {
                     //Ordenamos por nombre y asignacmos a variable
                     response.data = response.data.sort((a: any, b: any) =>
-                        a.display_name < b.display_name ? -1 : 1
+                        a.name.common < b.name.common ? -1 : 1
                     );
                     this.countries = response.data;
                 })

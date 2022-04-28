@@ -14,9 +14,9 @@
             v-for="(countries, index) in countries"
             :key="index"
             class="text-gray-400 hover:text-black cursor-pointer mx-6"
-            @click="openGoogleMap(countries.lat, countries.lon)">
+            @click="openGoogleMap(countries.latlng)">
             <i class="fa-solid fa-circle-right"></i>
-            {{ countries.display_name }}
+            {{ countries.name.common }}
           </li>
         </TransitionGroup>
       </div>
@@ -46,9 +46,9 @@ export default {
   //API Composition, nueva forma de organizar los datos en Vue 3
   setup() {
     //Función para buscar en maps la localización
-    function openGoogleMap(lat: String, lon: String) {
+    function openGoogleMap(latLong: String) {
       window.open(
-        "https://www.google.com/maps/search/" + lat + "," + lon,
+        "https://www.google.com/maps/search/" + latLong,
         "_blank"
       );
     }

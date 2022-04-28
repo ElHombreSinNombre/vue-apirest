@@ -7,7 +7,6 @@
     </a>
     <div>
       Asier Lara
-      <p> Prueba de código realizada para <a :href="url"><b>{{ business }} </b></a> </p>
     </div>
   </div>
 </template>
@@ -15,6 +14,5 @@
 <script lang="ts">
 export default {
   name: "footerComponent",
-  props: {"business": String, "url": String},
 };
 </script>
